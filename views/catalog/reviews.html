@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <div class="book_reviews">
-	<p>{{=B(T('Book Reviews'))}}</p>
+	{{pf = ompdal.getPublicationFormatByName(submission_id,"Rezension", available=True, approved=True)}}
+	{{if pf == None:
+	pf = ompdal.getPublicationFormatByName(submission_id,"Review", available=True, approved=True)
+	pass
+	}}
 	<p>
-	{{pf = ompdal.getPublicationFormatByName(submission_id,"REZENSION", available=True, approved=True)
+	{{
 	if pf:
+		=P(B(T('Book Reviews')))
 		for i in pf:
-		 fid =ompdal.getLatestRevisionOfReviewFileByPublicationFormat(submission_id, i['publication_format_id'])['file_id']
-			for j in ompdal.getSubmissionFileSettings(fid):
-				if j['locale']==locale:
-			  		if j['setting_name']== 'description':
-			    		=XML(j['setting_value'])
+		 fid =ompdal.getLatestRevisionOfReviewFileByPublicationFormat(submission_id, i['publication_format_id'])
+		 	if fid:
+		 	    fid = fid['file_id']
+				for j in ompdal.getSubmissionFileSettings(fid):
+					if j['locale']==locale:
+			  			if j['setting_name']== 'description':
+			    			=XML(j['setting_value'])
+			    		pass
 			  		pass   
 			 	pass
 			pass
