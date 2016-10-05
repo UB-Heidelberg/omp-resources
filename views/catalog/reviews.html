@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <div class="book_reviews">
-	{{pf = ompdal.getPublicationFormatByName(submission_id,"Rezension", available=True, approved=True)}}
+	{{pf = ompdal.getPublicationFormatByName(submission_id,"Rezension", available=False, approved=True)}}
 	{{if pf == None:
-	pf = ompdal.getPublicationFormatByName(submission_id,"Review", available=True, approved=True)
+	pf = ompdal.getPublicationFormatByName(submission_id,"Review", available=Fasle, approved=True)
 	pass
 	}}
 
