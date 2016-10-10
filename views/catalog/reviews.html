@@ -1,5 +1,27 @@
 <!DOCTYPE html>
 <div class="book_reviews">
+{{
+def set_publisher_l(p, s):
+if len(p)>0 and len(s)>0:
+ return A(p, _href=s)
+ elif len(p) > 0:
+ return p
+ elif len(s) > 0:  
+return A(s, _href=s)
+else:
+return None
+pass 
+
+}}
+
+{{
+def format_date(d):
+l = d.split('-')
+val =  '/'.join(reversed(l))
+val =val +'.'
+return val 
+}}
+
 	{{pf = ompdal.getPublicationFormatByName(submission_id,"Rezension", available=False, approved=True)}}
 	{{if pf == None:
 	pf = ompdal.getPublicationFormatByName(submission_id,"Review", available=Fasle, approved=True)
@@ -7,22 +29,39 @@
 	}}
 
 	{{
+	data =[]
 	if pf:
 		=P(B(T('Book Reviews')))
 		for i in pf:
 		 fid =ompdal.getLatestRevisionOfReviewFileByPublicationFormat(submission_id, i['publication_format_id'])
 		 	if fid:
-		 	    fid = fid['file_id']
-				for j in ompdal.getSubmissionFileSettings(fid):
-					if j['locale']==locale:
-			  			if j['setting_name']== 'description':
-			    			=XML(j['setting_value'])
-			    		pass
-			  		pass   
-			 	pass
+		 	
+		 	    li = ompdal.getSubmissionFileSettings(fid['file_id']).as_list()
+		 	     data = [l for l in li if l['locale']==locale or l['locale']=='']
+				v = {}
+				for d in data:
+					v[d['setting_name']]=d['setting_value']
+					
+				pass
+				=XML(v['description'])
+				=XML(v['creator'])
+				pl = set_publisher_l(v['publisher'], v['source'])
+				if pl:
+				 =XML(' in ')
+				 =pl
+				 
+				pass
+				=XML(' ')
+ 	           =XML(format_date(v['dateCreated']))			
+
 			pass
 		pass 
 	pass
 	}}
+
+
+
+			 	
+
 
 </div>
