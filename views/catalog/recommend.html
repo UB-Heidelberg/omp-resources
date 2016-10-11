@@ -1,0 +1,81 @@
+
+  {{
+  # -*- coding: utf-8 -*-
+  from email.mime.text import MIMEText
+  from subprocess import Popen, PIPE
+  
+  
+  form=FORM('', INPUT(_name='senderEmail', requires=IS_NOT_EMPTY()),
+  				INPUT(_name='recipientEmail', requires=IS_NOT_EMPTY()),
+  				INPUT(_name='recipientNotification'),
+  				INPUT(_name='siteURL',requires=IS_NOT_EMPTY()),
+  				INPUT(_name='recommmendReceiverNotify'),
+                INPUT(_type='submit'))
+   if form.process(session=None, formname='recommend-form').accepted:
+        if len(form.vars.recommmendReceiverNotify)==0:
+        	
+			msg = MIMEText(form.vars.recipientNotification.decode('utf-8') +'\n'+form.vars.siteURL)
+			msg["From"] = "no-reply@ub.uni-heidelberg.de"
+			msg["To"] =  form.vars.recipientEmail
+			msg["Subject"] = u"Recommend by Email"
+			p = Popen(["/usr/sbin/sendmail", "-t", "-oi"], stdin=PIPE)
+			p.communicate(msg.as_string())
+        	
+        pass
+   elif form.errors:
+        response.flash =  redirect(URL('error')) 
+  pass
+  }}
+
+
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#recommend-modal">
+  {{=T('Recommend')}}
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="recommend-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="recommmend-modal-label">{{=T('Recommend by Email')}}</h4>
+      </div>
+      <div class="modal-body">
+      	 <form action="#" enctype="multipart/form-data" method="post">
+			<div class="form-group">
+    			<label for="SenderEmail1">{{=T('Sender')}}</label>
+    			<input type="email" class="form-control" id="recommmend-sender-email"  placeholder="" name="senderEmail"  required>
+			    <label for="RecipientEmail">{{=T('Recipient')}}</label>
+			    <input type="email" class="form-control" id="recommend-recipient-email" aria-describedby="emailHelp" placeholder=""  required name="recipientEmail">
+			    <label for="ReceiverNotification">{{=T('Receiver notification')}}</label>
+			     <textarea class="form-control" rows="3" id="recommmend-recipient-notification" maxlength="500" name="recipientNotification"></textarea>
+			    <label for="RecipientLink">{{=T('Link')}}</label>
+			    <input type="text" class="form-control" value="{{=(request.env.wsgi_url_scheme+'://'+request.env.http_host+request.env.path_info)}}" onfocus="this.blur()" name="siteURL">
+			    <input type="hidden" name="_formname" value="recommend-form" />
+			    <input type="text"  id="recommmendReceiverNotify" name="recommmendReceiverNotify">
+			    <!-- small id="emailHelp" class="form-text text-muted">{{=T("We'll never share your email with anyone else.")}}</small-->
+			    
+			 </div>
+			  <button type="submit" class="btn btn-default">{{=T('Send')}}</button>
+    	</form>
+    	
+  	
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+#recommmendReceiverNotify {
+background: transparent;
+border: none;
+    
+}
+</style>
