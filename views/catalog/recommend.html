@@ -13,13 +13,22 @@
                 INPUT(_type='submit'))
    if form.process(session=None, formname='recommend-form').accepted:
         if len(form.vars.recommmendReceiverNotify)==0:
+        	msgPlain =form.vars.recipientNotification
+            for tag in ( "<table>","<tr>","<td>","</td>","<th>","</th>","<div>","<i>",\
+                 "</i>","<p>","<b>","</b>","<h1>","<h2>","<h3>" ):
+            	msgPlain=msgPlain.replace(tag,"")
+            pass    
         	
-			msg = MIMEText(form.vars.recipientNotification.decode('utf-8') +'\n'+form.vars.siteURL)
-			msg["From"] = "no-reply@ub.uni-heidelberg.de"
-			msg["To"] =  form.vars.recipientEmail
-			msg["Subject"] = u"Recommend by Email"
-			p = Popen(["/usr/sbin/sendmail", "-t", "-oi"], stdin=PIPE)
-			p.communicate(msg.as_string())
+    		for src in ( r"</p>",r"</h1>",r"</h2>","</h3>","</table>","</tr>" ):
+        		msgPlain=msgPlain.replace(src,chr(13))
+        	pass
+        	msg = MIMEText(msgPlain.decode('utf-8'), 'plain', 'utf-8')
+            msg["From"] = "no-reply@ub.uni-heidelberg.de"
+            msg["To"] =  form.vars.recipientEmail
+            msg["Subject"] = u"Recommend by Email"
+            p = Popen(["/usr/sbin/sendmail", "-t", "-oi"], stdin=PIPE)
+            p.communicate(msg.as_string())
+
         	
         pass
    elif form.errors:
@@ -48,11 +57,11 @@
     			<label for="SenderEmail1">{{=T('Sender')}}</label>
     			<input type="email" class="form-control" id="recommmend-sender-email"  placeholder="" name="senderEmail"  required>
 			    <label for="RecipientEmail">{{=T('Recipient')}}</label>
-			    <input type="email" class="form-control" id="recommend-recipient-email" aria-describedby="emailHelp" placeholder=""  required name="recipientEmail">
+			    <input type="email" class="form-control" id="recommend-recipient-email" aria-describedby="emailHelp" placeholder=""  required name="recipientEmail" >
 			    <label for="ReceiverNotification">{{=T('Receiver notification')}}</label>
-			     <textarea class="form-control" rows="3" id="recommmend-recipient-notification" maxlength="500" name="recipientNotification"></textarea>
+			     <textarea class="form-control" rows="3" id="recommmend-recipient-notification" maxlength="500" name="recipientNotification" ></textarea>
 			    <label for="RecipientLink">{{=T('Link')}}</label>
-			    <input type="text" class="form-control" value="{{=(request.env.wsgi_url_scheme+'://'+request.env.http_host+request.env.path_info)}}" onfocus="this.blur()" name="siteURL">
+			    <input type="text" class="form-control" value="{{=str(response['_view_environment']['myconf']['web']['url'])+request.env.path_info}}" onfocus="this.blur()" name="siteURL">
 			    <input type="hidden" name="_formname" value="recommend-form" />
 			    <input type="text"  id="recommmendReceiverNotify" name="recommmendReceiverNotify">
 			    <!-- small id="emailHelp" class="form-text text-muted">{{=T("We'll never share your email with anyone else.")}}</small-->
