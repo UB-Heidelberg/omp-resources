@@ -13,7 +13,7 @@
   				INPUT(_name='checksum'),
                 INPUT(_type='submit'))
    if form.process(session=None, formname='recommend-form').accepted:
-        if len(form.vars.recommmendReceiverNotify)==0 and checksum==form.vars.checksum:
+        if len(form.vars.recommmendReceiverNotify)==0 and checksum==form.vars.checksum and len(form.vars.recipientNotification) <500:
         	msgPlain =form.vars.recipientNotification
             for tag in ( "<table>","<tr>","<td>","</td>","<th>","</th>","<div>","<i>",\
                  "</i>","<p>","<b>","</b>","<h1>","<h2>","<h3>" ):
