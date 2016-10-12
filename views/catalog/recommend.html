@@ -4,15 +4,16 @@
   from email.mime.text import MIMEText
   from subprocess import Popen, PIPE
   
-  
+  checksum = request.cookies["session_id_ubhd_ompportal"].value   
   form=FORM('', INPUT(_name='senderEmail', requires=IS_NOT_EMPTY()),
   				INPUT(_name='recipientEmail', requires=IS_NOT_EMPTY()),
   				INPUT(_name='recipientNotification'),
   				INPUT(_name='siteURL',requires=IS_NOT_EMPTY()),
   				INPUT(_name='recommmendReceiverNotify'),
+  				INPUT(_name='checksum'),
                 INPUT(_type='submit'))
    if form.process(session=None, formname='recommend-form').accepted:
-        if len(form.vars.recommmendReceiverNotify)==0:
+        if len(form.vars.recommmendReceiverNotify)==0 and checksum==form.vars.checksum:
         	msgPlain =form.vars.recipientNotification
             for tag in ( "<table>","<tr>","<td>","</td>","<th>","</th>","<div>","<i>",\
                  "</i>","<p>","<b>","</b>","<h1>","<h2>","<h3>" ):
@@ -60,10 +61,13 @@
 			    <input type="email" class="form-control" id="recommend-recipient-email" aria-describedby="emailHelp" placeholder=""  required name="recipientEmail" >
 			    <label for="ReceiverNotification">{{=T('Receiver notification')}}</label>
 			     <textarea class="form-control" rows="3" id="recommmend-recipient-notification" maxlength="500" name="recipientNotification" ></textarea>
+			    <textarea  id="recommmendReceiverNotify" name="recommmendReceiverNotify"></textarea>
+			    <input type="hidden"  name="checksum" value="{{=(request.cookies["session_id_ubhd_ompportal"].value)}}"> 
 			    <label for="RecipientLink">{{=T('Link')}}</label>
 			    <input type="text" class="form-control" value="{{=str(response['_view_environment']['myconf']['web']['url'])+request.env.path_info}}" onfocus="this.blur()" name="siteURL">
 			    <input type="hidden" name="_formname" value="recommend-form" />
-			    <input type="text"  id="recommmendReceiverNotify" name="recommmendReceiverNotify">
+			    
+			    
 			    <!-- small id="emailHelp" class="form-text text-muted">{{=T("We'll never share your email with anyone else.")}}</small-->
 			    
 			 </div>
@@ -81,10 +85,14 @@
   </div>
 </div>
 
+
 <style>
 #recommmendReceiverNotify {
-background: transparent;
-border: none;
+ 		width: 0.5px;
+        height: 0.55px;
+        border: 1px solid #ffe;
+        
+        
+    }
     
-}
 </style>
