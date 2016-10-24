@@ -4,7 +4,8 @@
   {{=formatCitation(cleanTitle, subtitle, authors, editors, citation_year, press_settings.getLocalizedValue('location', ''), press_settings.getLocalizedValue('publisher', ''), doi, locale, series_name=series_name, series_pos=submission.series_position, max_contrib=3)}}
   {{=A(doi, _href="http://dx.doi.org/"+doi)}}
 </p>
-<!-- citation button begin-->
+<!-- citation button -->
+
 <a target="_blank" class="btn btn-default" data-toggle="modal" data-target="#citationModal" role="button">{{=T('More citation styles')}}</a>
 <!-- Modal -->
 <div id="citationModal" class="modal fade" role="dialog">
@@ -24,6 +25,8 @@
     </div>
   </div>
 </div>
+{{=SCRIPT(_src=URL('static', 'citeproc/citeproc.min.js'))}}
+{{=SCRIPT(_src=URL('static', 'citeproc/citeproc-wrapper.js'))}}
 <script type="text/javascript">
     $.fn.citeRender.defaults.baseUrl = '{{=URL('static', 'citeproc')}}';
     $.fn.citeRender.defaults.dataUrl = '{{=URL('api', 'csl')}}';
