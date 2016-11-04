@@ -28,32 +28,33 @@ return val
 	pass
 	}}
 
+
+
+
 	{{
 	data =[]
 	if pf:
-		=P(B(T('Book Reviews')))
+		=P(B(T('Media coverage')))
 		for i in pf:
-		 fid =ompdal.getLatestRevisionOfReviewFileByPublicationFormat(submission_id, i['publication_format_id'])
-		 	if fid:
-		 	
-		 	    li = ompdal.getSubmissionFileSettings(fid['file_id']).as_list()
-		 	     data = [l for l in li if l['locale']==locale or l['locale']=='']
+			fids =ompdal.getReviewFilesByPublicationFormat(submission_id, i['publication_format_id'])
+		 	for fid in fids:
+				li = ompdal.getSubmissionFileSettings(fid['file_id']).as_list()
+				data = [l for l in li if l['locale']==locale or l['locale']=='']
 				v = {}
 				for d in data:
 					v[d['setting_name']]=d['setting_value']
-					
 				pass
 				=XML(v['description'])
 				=XML(v['creator'])
 				pl = set_publisher_l(v['publisher'], v['source'])
 				if pl:
-				 =XML(' ')
-				 =pl
-				 
+					=XML(' ')
+					=pl	
 				pass
 				=XML(' ')
- 	           =XML(format_date(v['dateCreated']))			
-
+		                =XML(format_date(v['dateCreated']))			
+				=BR()	
+				pass
 			pass
 		pass 
 	pass
