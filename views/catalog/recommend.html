@@ -3,8 +3,8 @@
   # -*- coding: utf-8 -*-
   from email.mime.text import MIMEText
   from subprocess import Popen, PIPE
-  
-  checksum = request.cookies["session_id_ubhd_ompportal"].value   
+  import uuid
+  checksum = uuid.uuid4()
   form=FORM('', INPUT(_name='senderEmail', requires=IS_NOT_EMPTY()),
   				INPUT(_name='recipientEmail', requires=IS_NOT_EMPTY()),
   				INPUT(_name='recipientNotification'),
@@ -62,7 +62,7 @@
 			    <label for="ReceiverNotification">{{=T('Receiver notification')}}</label>
 			     <textarea class="form-control" rows="3" id="recommmend-recipient-notification" maxlength="500" name="recipientNotification" ></textarea>
 			    <textarea  id="recommmendReceiverNotify" name="recommmendReceiverNotify"></textarea>
-			    <input type="hidden"  name="checksum" value="{{=(request.cookies["session_id_ubhd_ompportal"].value)}}"> 
+			    <input type="hidden"  name="checksum" value="{{=checksum}}"> 
 			    <label for="RecipientLink">{{=T('Link')}}</label>
 			    <input type="text" class="form-control" value="{{=str(response['_view_environment']['myconf']['web']['url'])+request.env.path_info}}" onfocus="this.blur()" name="siteURL">
 			    <input type="hidden" name="_formname" value="recommend-form" />
