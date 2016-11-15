@@ -24,10 +24,9 @@ return val
 
 	{{pf = ompdal.getPublicationFormatByName(submission_id,"Rezension", available=False, approved=True)}}
 	{{if pf == None:
-	pf = ompdal.getPublicationFormatByName(submission_id,"Review", available=Fasle, approved=True)
+	pf = ompdal.getPublicationFormatByName(submission_id,"Review", available=False, approved=True)
 	pass
 	}}
-
 
 
 
@@ -53,7 +52,8 @@ return val
 				pass
 				=XML(' ')
 		                =XML(format_date(v['dateCreated']))			
-				=BR()	
+				=BR()
+				=BR()
 				pass
 			pass
 		pass 
