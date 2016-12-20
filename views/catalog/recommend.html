@@ -5,16 +5,18 @@
   from subprocess import Popen, PIPE
   import uuid
   checksum = uuid.uuid4()
+  subject=T("Book Recommendation")
+
   form=FORM('', INPUT(_name='senderEmail', requires=IS_NOT_EMPTY()),
   				INPUT(_name='recipientEmail', requires=IS_NOT_EMPTY()),
-  				INPUT(_name='recipientNotification'),
+
   				INPUT(_name='siteURL',requires=IS_NOT_EMPTY()),
   				INPUT(_name='recommmendReceiverNotify'),
   				INPUT(_name='checksum'),
                 INPUT(_type='submit'))
    if form.process(session=None, formname='recommend-form').accepted:
         if len(form.vars.recommmendReceiverNotify)==0 and checksum==form.vars.checksum and len(form.vars.recipientNotification) <500:
-        	msgPlain =form.vars.recipientNotification
+        	msgPlain ="message"
             for tag in ( "<table>","<tr>","<td>","</td>","<th>","</th>","<div>","<i>",\
                  "</i>","<p>","<b>","</b>","<h1>","<h2>","<h3>" ):
             	msgPlain=msgPlain.replace(tag,"")
@@ -26,7 +28,7 @@
         	msg = MIMEText(msgPlain.decode('utf-8'), 'plain', 'utf-8')
             msg["From"] = "no-reply@ub.uni-heidelberg.de"
             msg["To"] =  form.vars.recipientEmail
-            msg["Subject"] = u"Recommend by Email"
+            msg["Subject"] = subject
             p = Popen(["/usr/sbin/sendmail", "-t", "-oi"], stdin=PIPE)
             p.communicate(msg.as_string())
 
@@ -35,11 +37,12 @@
    elif form.errors:
         response.flash =  redirect(URL('error')) 
   pass
+  #{{=str(response['_view_environment']['myconf']['web']['url'])+request.env.path_info 
   }}
 
 
 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#recommend-modal">
-  {{=T('Recommend')}}
+  {{=T('Share')}}
 </button>
 
 <!-- Modal -->
@@ -59,12 +62,11 @@
     			<input type="email" class="form-control" id="recommmend-sender-email"  placeholder="" name="senderEmail"  required>
 			    <label for="RecipientEmail">{{=T('Recipient')}}</label>
 			    <input type="email" class="form-control" id="recommend-recipient-email" aria-describedby="emailHelp" placeholder=""  required name="recipientEmail" >
-			    <label for="ReceiverNotification">{{=T('Receiver notification')}}</label>
-			     <textarea class="form-control" rows="3" id="recommmend-recipient-notification" maxlength="500" name="recipientNotification" ></textarea>
+
 			    <textarea  id="recommmendReceiverNotify" name="recommmendReceiverNotify"></textarea>
 			    <input type="hidden"  name="checksum" value="{{=checksum}}"> 
-			    <label for="RecipientLink">{{=T('Link')}}</label>
-			    <input type="text" class="form-control" value="{{=str(response['_view_environment']['myconf']['web']['url'])+request.env.path_info}}" onfocus="this.blur()" name="siteURL">
+
+
 			    <input type="hidden" name="_formname" value="recommend-form" />
 			    
 			    
