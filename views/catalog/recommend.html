@@ -5,39 +5,29 @@
   from subprocess import Popen, PIPE
   import uuid
   checksum = uuid.uuid4()
-  subject=T("Book Recommendation")
-
   form=FORM('', INPUT(_name='senderEmail', requires=IS_NOT_EMPTY()),
   				INPUT(_name='recipientEmail', requires=IS_NOT_EMPTY()),
-
+  				INPUT(_name='recipientNotification'),
   				INPUT(_name='siteURL',requires=IS_NOT_EMPTY()),
   				INPUT(_name='recommmendReceiverNotify'),
   				INPUT(_name='checksum'),
                 INPUT(_type='submit'))
-   if form.process(session=None, formname='recommend-form').accepted:
-        if len(form.vars.recommmendReceiverNotify)==0 and checksum==form.vars.checksum and len(form.vars.recipientNotification) <500:
-        	msgPlain ="message"
-            for tag in ( "<table>","<tr>","<td>","</td>","<th>","</th>","<div>","<i>",\
-                 "</i>","<p>","<b>","</b>","<h1>","<h2>","<h3>" ):
-            	msgPlain=msgPlain.replace(tag,"")
-            pass    
-        	
-    		for src in ( r"</p>",r"</h1>",r"</h2>","</h3>","</table>","</tr>" ):
-        		msgPlain=msgPlain.replace(src,chr(13))
-        	pass
-        	msg = MIMEText(msgPlain.decode('utf-8'), 'plain', 'utf-8')
+
+  if form.process(session=None, formname='recommend-form').accepted:
+        if checksum==form.vars.checksum and len(form.vars.senderName) <200:
+        	senderName =form.vars.senderName
+            msg = MIMEText(msgPlain.decode('utf-8'), 'plain', 'utf-8')
             msg["From"] = "no-reply@ub.uni-heidelberg.de"
             msg["To"] =  form.vars.recipientEmail
-            msg["Subject"] = subject
+            msg["Subject"] = T('Book Recommendation')
             p = Popen(["/usr/sbin/sendmail", "-t", "-oi"], stdin=PIPE)
             p.communicate(msg.as_string())
 
-        	
+
         pass
-   elif form.errors:
-        response.flash =  redirect(URL('error')) 
+  elif form.errors:
+        response.flash =  redirect(URL('index'))
   pass
-  #{{=str(response['_view_environment']['myconf']['web']['url'])+request.env.path_info 
   }}
 
 
@@ -53,20 +43,20 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" id="recommmend-modal-label">{{=T('Recommend by Email')}}</h4>
+        <h4 class="modal-title" id="recommmend-modal-label">{{=T('Book Recommendation')}}</h4>
       </div>
       <div class="modal-body">
       	 <form action="#" enctype="multipart/form-data" method="post">
 			<div class="form-group">
-    			<label for="SenderEmail1">{{=T('Sender')}}</label>
-    			<input type="email" class="form-control" id="recommmend-sender-email"  placeholder="" name="senderEmail"  required>
+    			<label for="SenderEmail1">{{=T('Sender name')}}</label>
+                <input class="form-control" type="text" placeholder="" id="senderName" required>
+    			<label for="senderName" class="">{{=T('Sender mail')}}</label>
+                <input type="email" class="form-control" id="recommmend-sender-email"  placeholder="" name="senderEmail"  required>
+
+
 			    <label for="RecipientEmail">{{=T('Recipient')}}</label>
 			    <input type="email" class="form-control" id="recommend-recipient-email" aria-describedby="emailHelp" placeholder=""  required name="recipientEmail" >
-
-			    <textarea  id="recommmendReceiverNotify" name="recommmendReceiverNotify"></textarea>
-			    <input type="hidden"  name="checksum" value="{{=checksum}}"> 
-
-
+			    <input type="hidden"  name="checksum" value="{{=checksum}}">
 			    <input type="hidden" name="_formname" value="recommend-form" />
 			    
 			    
@@ -80,7 +70,8 @@
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{=T('Close')}}</button>
+
         
       </div>
     </div>
