@@ -18,7 +18,7 @@ if form.process(formname='reccommendform').accepted:
 
     rc = [request.vars.name, request.vars.surname]
     if session.forced_language == 'en':
-    rc.append('recommends you')
+    rc.append('recommends you this book, published by Heidelberg University Publishing' + '\n\n' + web_url)
     elif session.forced_language == 'de':
         rc.append("empfiehlt Ihnen aus dem Verlagsprogramm von Heidelberg University Publishing" + '\n\n' + web_url)
     pass
