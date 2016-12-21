@@ -5,18 +5,37 @@
   from subprocess import Popen, PIPE
   import uuid
   checksum = uuid.uuid4()
-  form=FORM('', INPUT(_name='senderEmail', requires=IS_NOT_EMPTY()),
+
+  rc = 'recommends you'
+  if session.forced_language == 'de':
+   rc = "empfiehlt Ihnen aus dem Verlagsprogramm von Heidelberg University Publishing"+'\n'+str(['myconf']['web']['url'])
+  pass
+
+
+
+  form=FORM('',
+                INPUT(_name='sName', requires=IS_NOT_EMPTY()),
+                INPUT(_name='sSName', requires=IS_NOT_EMPTY()),
+                INPUT(_name='senderEmail', requires=IS_NOT_EMPTY()),
   				INPUT(_name='recipientEmail', requires=IS_NOT_EMPTY()),
-  				INPUT(_name='recipientNotification'),
-  				INPUT(_name='siteURL',requires=IS_NOT_EMPTY()),
-  				INPUT(_name='recommmendReceiverNotify'),
   				INPUT(_name='checksum'),
                 INPUT(_type='submit'))
 
   if form.process(session=None, formname='recommend-form').accepted:
-        if checksum==form.vars.checksum and len(form.vars.senderName) <200:
-        	senderName =form.vars.senderName
-            msg = MIMEText(msgPlain.decode('utf-8'), 'plain', 'utf-8')
+        if checksum==form.vars.checksum and len(form.vars.sName) <200:
+            sName =form.vars.sName
+            sSName =form.vars.sSName
+            path=str(response['_view_environment']['myconf']['web']['url'])+request.env.path_info
+            
+            citation_year=dateToStr(date_published, locale, "%Y")
+            citation = formatCitation(cleanTitle, subtitle, authors, editors, citation_year,\
+            press_settings.getLocalizedValue('location', ''), press_settings.getLocalizedValue('publisher', ''),\
+            doi, locale, series_name=series_name, series_pos=submission.series_position, max_contrib=3)
+            doi_url = "http://dx.doi.org/"+doi
+
+            email_elements = [sSName,sName, rc,' '.join([citation,doi_url]),path]
+            email_text = '{} {} {} \n {} } {}'.format(email_text)
+            msg = MIMEText(emailText.decode('utf-8'), 'plain', 'utf-8')
             msg["From"] = "no-reply@ub.uni-heidelberg.de"
             msg["To"] =  form.vars.recipientEmail
             msg["Subject"] = T('Book Recommendation')
@@ -44,17 +63,20 @@
           <span aria-hidden="true">&times;</span>
         </button>
         <h4 class="modal-title" id="recommmend-modal-label">{{=T('Book Recommendation')}}</h4>
+
       </div>
       <div class="modal-body">
       	 <form action="#" enctype="multipart/form-data" method="post">
 			<div class="form-group">
-    			<label for="SenderEmail1">{{=T('Sender name')}}</label>
-                <input class="form-control" type="text" placeholder="" id="senderName" required>
-    			<label for="senderName" class="">{{=T('Sender mail')}}</label>
+                <label for="SendeSName">{{=T('Sender first name')}}</label>
+                <input class="form-control" type="text" placeholder="" id="sSName" required>
+    			<label for="SendeName">{{=T('Sender last name')}}</label>
+                <input class="form-control" type="text" placeholder="" id="sName" required>
+    			<label for="senderEmail" class="">{{=T('Sender mail')}}</label>
                 <input type="email" class="form-control" id="recommmend-sender-email"  placeholder="" name="senderEmail"  required>
 
 
-			    <label for="RecipientEmail">{{=T('Recipient')}}</label>
+			    <label for="RecipientEmail">{{=T('Recipient mail')}}</label>
 			    <input type="email" class="form-control" id="recommend-recipient-email" aria-describedby="emailHelp" placeholder=""  required name="recipientEmail" >
 			    <input type="hidden"  name="checksum" value="{{=checksum}}">
 			    <input type="hidden" name="_formname" value="recommend-form" />
