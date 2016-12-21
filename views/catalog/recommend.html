@@ -7,9 +7,6 @@
   checksum = uuid.uuid4()
 
 
-
-
-
   form=FORM('',
                 INPUT(_name='sName', requires=IS_NOT_EMPTY()),
                 INPUT(_name='sSName', requires=IS_NOT_EMPTY()),
@@ -19,7 +16,7 @@
                 INPUT(_type='submit'))
 
   if form.process(session=None, formname='recommend-form').accepted:
-        if checksum==form.vars.checksum and len(form.vars.sName) <200:
+        if checksum==form.vars.checksum:
             sName =form.vars.sName
             sSName =form.vars.sSName
             rc = 'recommends you'
@@ -46,7 +43,7 @@
 
         pass
   elif form.errors:
-        response.flash =  redirect(URL('index'))
+        response.flash = form
   pass
   }}
 
@@ -71,7 +68,7 @@
 			<div class="form-group">
                 <label for="SendeSName">{{=T('Sender first name')}}</label>
                 <input class="form-control" type="text" placeholder="" id="sSName" required>
-    			<label for="SendeName">{{=T('Sender last name')}}</label>
+    			<label for="SendeName">{{=T('Sender surname')}}</label>
                 <input class="form-control" type="text" placeholder="" id="sName" required>
     			<label for="senderEmail" class="">{{=T('Sender mail')}}</label>
                 <input type="email" class="form-control" id="recommmend-sender-email"  placeholder="" name="senderEmail"  required>
