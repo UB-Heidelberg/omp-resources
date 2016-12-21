@@ -6,34 +6,31 @@
   import uuid
   checksum = uuid.uuid4()
 
-
   form=FORM('',
                 INPUT(_name='sName', requires=IS_NOT_EMPTY()),
                 INPUT(_name='sSName', requires=IS_NOT_EMPTY()),
                 INPUT(_name='senderEmail', requires=IS_NOT_EMPTY()),
-  				INPUT(_name='recipientEmail', requires=IS_NOT_EMPTY()),
-  				INPUT(_name='checksum'),
+                                INPUT(_name='recipientEmail', requires=IS_NOT_EMPTY()),
+                                INPUT(_name='checksum'),
                 INPUT(_type='submit'))
 
   if form.process(session=None, formname='recommend-form').accepted:
         if checksum==form.vars.checksum:
             sName =form.vars.sName
             sSName =form.vars.sSName
-            rc = 'recommends you'
+            rc = 'recommends you\n'
             if session.forced_language == 'de':
-            rc = "empfiehlt Ihnen aus dem Verlagsprogramm von Heidelberg University Publishing"+'\n'+str(['myconf']['web']['url'])
+            rc = "empfiehlt Ihnen aus dem Verlagsprogramm von Heidelberg University Publishing"+'\n'+str(['myconf']['web']['url']+'\n')
             pass
             path=str(response['_view_environment']['myconf']['web']['url'])+request.env.path_info
-            
+
             citation_year=dateToStr(date_published, locale, "%Y")
-            citation = formatCitation(cleanTitle, subtitle, authors, editors, citation_year,\
-            press_settings.getLocalizedValue('location', ''), press_settings.getLocalizedValue('publisher', ''),\
-            doi, locale, series_name=series_name, series_pos=submission.series_position, max_contrib=3)
+            citation = formatCitation(cleanTitle, subtitle, authors, editors, citation_year, press_settings.getLocalizedValue('location', ''), press_settings.getLocalizedValue('publisher', ''), doi, locale, series_name=series_name, series_pos=submission.series_position, max_contrib=3)
             doi_url = "http://dx.doi.org/"+doi
 
             email_elements = [sSName,sName, rc,' '.join([citation,doi_url]),path]
-            email_text = '{} {} {} \n {}  {}'.format(email_text)
-            msg = MIMEText(emailText.decode('utf-8'), 'plain', 'utf-8')
+            email_text = ' '.join(email_elements)
+            msg = MIMEText(email_text.decode('utf-8'), 'plain', 'utf-8')
             msg["From"] = "no-reply@ub.uni-heidelberg.de"
             msg["To"] =  form.vars.recipientEmail
             msg["Subject"] = T('Book Recommendation')
@@ -42,8 +39,11 @@
 
 
         pass
+
+
+
   elif form.errors:
-        response.flash = form
+        response.flash =  redirect(URL('index'))
   pass
   }}
 
