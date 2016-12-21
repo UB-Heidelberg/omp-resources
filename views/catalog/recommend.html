@@ -6,10 +6,7 @@
   import uuid
   checksum = uuid.uuid4()
 
-  rc = 'recommends you'
-  if session.forced_language == 'de':
-   rc = "empfiehlt Ihnen aus dem Verlagsprogramm von Heidelberg University Publishing"+'\n'+str(['myconf']['web']['url'])
-  pass
+
 
 
 
@@ -25,6 +22,10 @@
         if checksum==form.vars.checksum and len(form.vars.sName) <200:
             sName =form.vars.sName
             sSName =form.vars.sSName
+            rc = 'recommends you'
+            if session.forced_language == 'de':
+            rc = "empfiehlt Ihnen aus dem Verlagsprogramm von Heidelberg University Publishing"+'\n'+str(['myconf']['web']['url'])
+            pass
             path=str(response['_view_environment']['myconf']['web']['url'])+request.env.path_info
             
             citation_year=dateToStr(date_published, locale, "%Y")
@@ -34,7 +35,7 @@
             doi_url = "http://dx.doi.org/"+doi
 
             email_elements = [sSName,sName, rc,' '.join([citation,doi_url]),path]
-            email_text = '{} {} {} \n {} } {}'.format(email_text)
+            email_text = '{} {} {} \n {}  {}'.format(email_text)
             msg = MIMEText(emailText.decode('utf-8'), 'plain', 'utf-8')
             msg["From"] = "no-reply@ub.uni-heidelberg.de"
             msg["To"] =  form.vars.recipientEmail
