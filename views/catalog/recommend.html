@@ -6,21 +6,14 @@
   import uuid
   checksum = uuid.uuid4()
 
-  form=FORM('',
-                INPUT(_name='sName', requires=IS_NOT_EMPTY()),
-                INPUT(_name='sSName', requires=IS_NOT_EMPTY()),
-                INPUT(_name='senderEmail', requires=IS_NOT_EMPTY()),
-                                INPUT(_name='recipientEmail', requires=IS_NOT_EMPTY()),
-                                INPUT(_name='checksum'),
-                INPUT(_type='submit'))
 
-  if form.process(session=None, formname='recommend-form').accepted:
-        if checksum==form.vars.checksum:
+    if form.process(formname='reccommendform').accepted:
+    redirect(URL('error'))
             sName =form.vars.sName
             sSName =form.vars.sSName
             rc = 'recommends you\n'
             if session.forced_language == 'de':
-            rc = "empfiehlt Ihnen aus dem Verlagsprogramm von Heidelberg University Publishing"+'\n'+str(['myconf']['web']['url']+'\n')
+            rc = "empfiehlt Ihnen aus dem Verlagsprogramm von Heidelberg University Publishing"+'\n'+str(response['_view_environment']['myconf']['web']['url']+'\n')
             pass
             path=str(response['_view_environment']['myconf']['web']['url'])+request.env.path_info
 
@@ -29,7 +22,7 @@
             doi_url = "http://dx.doi.org/"+doi
 
             email_elements = [sSName,sName, rc,' '.join([citation,doi_url]),path]
-            email_text = ' '.join(email_elements)
+            email_text = 'SSS '
             msg = MIMEText(email_text.decode('utf-8'), 'plain', 'utf-8')
             msg["From"] = "no-reply@ub.uni-heidelberg.de"
             msg["To"] =  form.vars.recipientEmail
@@ -38,18 +31,19 @@
             p.communicate(msg.as_string())
 
 
-        pass
-
-
 
   elif form.errors:
-        response.flash =  redirect(URL('index'))
+
+        redirect(URL('error'))
   pass
+
   }}
 
 
 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#recommend-modal">
   {{=T('Share')}}
+
+
 </button>
 
 <!-- Modal -->
@@ -64,6 +58,7 @@
 
       </div>
       <div class="modal-body">
+
       	 <form action="#" enctype="multipart/form-data" method="post">
 			<div class="form-group">
                 <label for="SendeSName">{{=T('Sender first name')}}</label>
@@ -76,8 +71,9 @@
 
 			    <label for="RecipientEmail">{{=T('Recipient mail')}}</label>
 			    <input type="email" class="form-control" id="recommend-recipient-email" aria-describedby="emailHelp" placeholder=""  required name="recipientEmail" >
-			    <input type="hidden"  name="checksum" value="{{=checksum}}">
-			    <input type="hidden" name="_formname" value="recommend-form" />
+			     <input type="hidden" name="_formname" value="reccommendform">
+                    <input type="hidden" name="_formkey" value="{{=form.formkey}}">
+
 			    
 			    
 			    <!-- small id="emailHelp" class="form-text text-muted">{{=T("We'll never share your email with anyone else.")}}</small-->
