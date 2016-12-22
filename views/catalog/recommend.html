@@ -14,7 +14,7 @@ form = FORM(
     INPUT(name='recipientEmail', requires=IS_NOT_EMPTY()),
     INPUT(type='submit'))
 if form.process(formname='reccommendform').accepted:
-    web_url = str(response['_view_environment']['myconf']['web']['url'])
+    web_url = str(response['_view_environment']['myconf']['web']['url'])+'/'+str(request.application)
 
     rc = [request.vars.name, request.vars.surname]
     if session.forced_language == 'en':
@@ -52,7 +52,9 @@ pass
 
 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#recommend-modal">
   {{=T('Share')}}
+
 </button>
+
 
 <!-- Modal -->
 <div class="modal fade" id="recommend-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
