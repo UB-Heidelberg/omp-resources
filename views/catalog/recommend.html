@@ -16,7 +16,7 @@ form = FORM(
 if form.process(formname='reccommendform').accepted:
     web_url = str(response['_view_environment']['myconf']['web']['url'])
 
-    if str(request.application)=='heiup' :
+    if str(request.application) !='heiup' :
         web_url += '/'+str(request.application)
     pass
 
