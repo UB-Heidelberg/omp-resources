@@ -14,7 +14,7 @@ form = FORM(
     INPUT(name='recipientEmail', requires=IS_NOT_EMPTY()),
     INPUT(type='submit'))
 if form.process(formname='reccommendform').accepted:
-    web_url = str(response['_view_environment']['myconf']['web']['url']))
+    web_url = str(response['_view_environment']['myconf']['web']['url'])
 
     rc = [request.vars.name, request.vars.surname]
     if session.forced_language == 'en':
