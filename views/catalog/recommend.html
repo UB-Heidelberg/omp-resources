@@ -16,6 +16,11 @@ form = FORM(
 if form.process(formname='reccommendform').accepted:
     web_url = str(response['_view_environment']['myconf']['web']['url'])
 
+    if str(request.application) !='heiup' :
+        web_url += '/'+str(request.application)
+    pass
+
+
     rc = [request.vars.name, request.vars.surname]
     if session.forced_language == 'en':
     rc.append('recommends you this book, published by Heidelberg University Publishing' + ' ' + web_url)
@@ -24,7 +29,7 @@ if form.process(formname='reccommendform').accepted:
     pass
 
 
-    path = web_url + request.env.path_info
+    path = str(response['_view_environment']['myconf']['web']['url']) + request.env.path_info
 
     citation_year = dateToStr(date_published, locale, "%Y")
     citation = formatCitation(cleanTitle, subtitle, authors, editors, citation_year,
@@ -52,7 +57,9 @@ pass
 
 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#recommend-modal">
   {{=T('Share')}}
+
 </button>
+
 
 <!-- Modal -->
 <div class="modal fade" id="recommend-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
