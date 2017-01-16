@@ -44,7 +44,7 @@ if form.process(formname='reccommendform').accepted:
 
 
     rc = [request.vars.name, request.vars.surname]
-    rc.append(str(email_content.get(response['_view_environment']['myconf']['omp']['press_id']).get(session.forced_language))) + ' ' + web_url)
+    rc.append(str(email_content.get(response['_view_environment']['myconf']['omp']['press_id']).get(session.forced_language)) + ' ' + web_url)
     path = str(response['_view_environment']['myconf']['web']['url']) + request.env.path_info
 
     citation_year = dateToStr(date_published, locale, "%Y")
