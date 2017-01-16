@@ -47,14 +47,18 @@ if form.process(formname='reccommendform').accepted:
     rc = [request.vars.name, request.vars.surname]
     e_text= email_content.get(response['_view_environment']['myconf']['omp']['press_id']).get(session.forced_language)
     rc.append(str(e_text[0]))
-    rc.append(' ' + web_url)
 
-    rc2=''
+
+    rc2=[]
     try:
-        rc2=str(e_text[1])
+        rc2.append(str(e_text[1]))
     except:
         pass
 
+    if len(rc2) > 0:
+        rc2.append(web_url)
+    else:
+        rc.append(web_url)
 
 
     path = str(response['_view_environment']['myconf']['web']['url']) + request.env.path_info
@@ -66,7 +70,7 @@ if form.process(formname='reccommendform').accepted:
                               series_name=series_name, series_pos=submission.series_position, max_contrib=3)
     doi_url = "http://dx.doi.org/" + doi
 
-    email_elements = [' '.join(rc), ' '.join([citation, doi_url]),rc2, path]
+    email_elements = [' '.join(rc), ' '.join([citation, doi_url]),' '.join(rc2), path]
 
     email_text = '\n\n'.join(email_elements)
     msg = MIMEText(email_text.decode('utf-8'), 'plain', 'utf-8')
