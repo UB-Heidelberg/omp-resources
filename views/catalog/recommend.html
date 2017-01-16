@@ -6,25 +6,26 @@ checksum = uuid.uuid4()
 from email.mime.text import MIMEText
 from subprocess import Popen, PIPE
 
-email_content ={  "6": {
-                    "de":"empfiehlt Ihnen aus dem Verlagsprogramm von Heidelberg University Publishing",
-                    "en":"recommends you this book, published by Heidelberg University Publishing"
+email_content ={"6": {
+                    "de": ["empfiehlt Ihnen aus dem Verlagsprogramm von Heidelberg University Publishing"],
+                    "en":["recommends you this book, published by Heidelberg University Publishing"]
                     },
                 "1":{
-                    "de":"empfiehlt Ihnen aus dem Verlagsprogramm von heiBOOKS, der E-Book-Plattform der Universitätsbibliothek Heidelberg",
-                    "en":"recommends you {cleanTitle} published by heiBOOKS, the e-book platform of the Heidelberg University Library"
+                    "de":["empfiehlt Ihnen aus dem Verlagsprogramm von heiBOOKS, der E-Book-Plattform der Universitätsbibliothek Heidelberg"],
+                    "en":["recommends you","published by heiBOOKS, the e-book platform of the Heidelberg University Library"]
+
                     },
                 "4":{
-                    "de":"empfiehlt Ihnen aus dem Programm von CrossAsia-eBooks, der Open-Access-Publikationsplattform für E-Books von CrossAsia",
-                    "en":"recommends to you the following book published by CrossAsia-eBooks"
+                    "de":["empfiehlt Ihnen aus dem Programm von CrossAsia-eBooks, der Open-Access-Publikationsplattform für E-Books von CrossAsia"],
+                    "en":["recommends to you the following book published by CrossAsia-eBooks"]
                     },
                 "2":{
-                    "de":"empfiehlt Ihnen aus dem Angebot von arthistoricum.net – ART-Books",
-                    "en":"recommends the following title from the publisher’s list of arthistoricum.net – ART-Books"
+                    "de":["empfiehlt Ihnen aus dem Angebot von arthistoricum.net – ART-Books"],
+                    "en":["recommends the following title from the publisher’s list of arthistoricum.net – ART-Books"]
                     },
                 "3":{
-                    "de":"empfiehlt Ihnen aus dem Angebot von Propylaeum – Propylaeum–eBOOKS",
-                    "en":"recommends the following title from the publisher’s list of Propylaeum – Propylaeum–eBOOKS"
+                    "de":["empfiehlt Ihnen aus dem Angebot von Propylaeum – Propylaeum–eBOOKS"],
+                    "en":["recommends the following title from the publisher’s list of Propylaeum – Propylaeum–eBOOKS"]
                     },
             }
 
@@ -44,7 +45,18 @@ if form.process(formname='reccommendform').accepted:
 
 
     rc = [request.vars.name, request.vars.surname]
-    rc.append(str(email_content.get(response['_view_environment']['myconf']['omp']['press_id']).get(session.forced_language)) + ' ' + web_url)
+    e_text= email_content.get(response['_view_environment']['myconf']['omp']['press_id']).get(session.forced_language)
+    rc.append(str(e_text[0]))
+    rc.append(' ' + web_url)
+
+    rc2=''
+    try:
+        rc2=str(e_text[1])
+    except:
+        pass
+
+
+
     path = str(response['_view_environment']['myconf']['web']['url']) + request.env.path_info
 
     citation_year = dateToStr(date_published, locale, "%Y")
@@ -54,7 +66,8 @@ if form.process(formname='reccommendform').accepted:
                               series_name=series_name, series_pos=submission.series_position, max_contrib=3)
     doi_url = "http://dx.doi.org/" + doi
 
-    email_elements = [' '.join(rc), ' '.join([citation, doi_url]), path]
+    email_elements = [' '.join(rc), ' '.join([citation, doi_url]),rc2, path]
+
     email_text = '\n\n'.join(email_elements)
     msg = MIMEText(email_text.decode('utf-8'), 'plain', 'utf-8')
     msg["From"]  = request.vars.senderEmail
