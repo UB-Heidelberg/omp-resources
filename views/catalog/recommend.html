@@ -6,23 +6,23 @@ checksum = uuid.uuid4()
 from email.mime.text import MIMEText
 from subprocess import Popen, PIPE
 
-statements ={   1: {
+email_text ={   "1": {
                     "de":"empfiehlt Ihnen aus dem Verlagsprogramm von Heidelberg University Publishing",
                     "en":"recommends you this book, published by Heidelberg University Publishing"
                     },
-                2:{
+                "2":{
                     "de":"empfiehlt Ihnen aus dem Verlagsprogramm von heiBOOKS, der E-Book-Plattform der Universitätsbibliothek Heidelberg",
                     "en":"recommends you {cleanTitle} published by heiBOOKS, the e-book platform of the Heidelberg University Library"
                     },
-                3:{
+                "3":{
                     "de":"empfiehlt Ihnen aus dem Programm von CrossAsia-eBooks, der Open-Access-Publikationsplattform für E-Books von CrossAsia",
                     "en":"recommends to you the following book published by CrossAsia-eBooks"
                     },
-                4:{
+                "4":{
                     "de":"empfiehlt Ihnen aus dem Angebot von arthistoricum.net – ART-Books",
                     "en":"recommends the following title from the publisher’s list of arthistoricum.net – ART-Books"
                     },
-                6:{
+                "6":{
                     "de":"empfiehlt Ihnen aus dem Angebot von Propylaeum – Propylaeum–eBOOKS",
                     "en":"recommends the following title from the publisher’s list of Propylaeum – Propylaeum–eBOOKS"
                     },
@@ -44,7 +44,7 @@ if form.process(formname='reccommendform').accepted:
 
 
     rc = [request.vars.name, request.vars.surname]
-    rc.append(str(statements.get(response['_view_environment']['myconf']['omp']['press_id'].get(session.forced_language))) + ' ' + web_url)
+    rc.append(email_text.get(response['_view_environment']['myconf']['omp']['press_id'].get(session.forced_language)) + ' ' + web_url)
     path = str(response['_view_environment']['myconf']['web']['url']) + request.env.path_info
 
     citation_year = dateToStr(date_published, locale, "%Y")
