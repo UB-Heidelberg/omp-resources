@@ -63,8 +63,9 @@ if form.process(formname='reccommendform').accepted:
 
     path = str(response['_view_environment']['myconf']['web']['url']) + request.env.path_info
 
-    citation_year = dateToStr(date_published, locale, "%Y")
-    citation = formatCitation(cleanTitle, subtitle, authors, editors, citation_year,
+    #TODO citation_year = dateToStr(date_published, locale, "%Y")
+
+    citation = formatCitation(cleanTitle, subtitle, authors, editors, date_published,
                               press_settings.getLocalizedValue('location', ''),
                               press_settings.getLocalizedValue('publisher', ''), doi, locale,
                               series_name=series_name, series_pos=submission.series_position, max_contrib=3)
