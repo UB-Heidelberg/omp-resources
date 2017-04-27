@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <p>
-  {{citation_year=dateToStr(date_published, locale, "%Y")}}
-  {{=formatCitation(cleanTitle, subtitle, authors, editors, citation_year, press_settings.getLocalizedValue('location', ''), press_settings.getLocalizedValue('publisher', ''), doi, locale, series_name=series_name, series_pos=submission.series_position, max_contrib=3)}}
+  {{=formatCitation(cleanTitle, subtitle, authors, editors, date_published,
+    press_settings.getLocalizedValue('location', ''), press_settings.getLocalizedValue('publisher', ''), doi, locale,
+    series_name=series_name, series_pos=submission.series_position, max_contrib=3,date_first_published=date_first_published)}}
   {{=A(doi, _href="http://dx.doi.org/"+doi)}}
 </p>
 <!-- citation button -->
