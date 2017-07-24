@@ -13,14 +13,17 @@
          {{if full_file:}}
         {{file_type = full_file.attributes.file_type.split('/')[1] if '/' in full_file.attributes.file_type else full_file.attributes.file_type}}
         {{file_type = 'xml' if file_type == 'html' else file_type }}
-        <div class="stats_chapter_row">											
+
+        <div class="stats_chapter_row">
           {{full_file = pf.associated_items.get('full_file')}}
           {{if full_file : }}
           {{file_type = full_file.attributes.file_type.split('/')[1] if '/' in full_file.attributes.file_type else full_file.attributes.file_type}}
           {{file_type = 'html' if file_type == 'xml' else file_type }}
+          {{file_type = 'epub' if file_type == 'epub+zip' else file_type }}
 
           <div class="stats_chapter_cell">{{=B(file_type.upper())}}</div>                            
           {{file_type = 'xml' if file_type == 'html' else file_type }}
+
           {{fid=str(submission.submission_id)+'-'+str(full_file.attributes['file_id'])+'-'+str(file_type)}}
           {{file_ids.append(fid)}}
           <div id="{{=fid}}" class="chapter_file full_file" style="padding-left:1em"></div>
@@ -42,7 +45,10 @@
         <div class="stats_chapter_row statss_table_head">
           <div class="stats_chapter_cell"></div>
           {{for pf in digital_publication_formats:}}
-          <div class="stats_chapter_cell">{{=TD(pf.settings.getLocalizedValue('name', locale))}}</div>
+         {{pf_name = pf.settings.getLocalizedValue('name', locale)}}
+          {{if pf_name.lower()!='epub':}}
+          <div class="stats_chapter_cell">{{=TD(pf_name)}}</div>
+          {{pass}}
           {{pass}}
         </div>
         {{display_authors=haveMultipleAuthors(chapters)}}
