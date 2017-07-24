@@ -86,7 +86,9 @@
           {{for pf in digital_publication_formats:}}
           {{file_type=pf.settings.getLocalizedValue('name', locale).lower()}}
           {{file_type = 'xml' if file_type == 'html' else file_type }}
+           {{if pf_name.lower()!='epub':}}
           <div class="stats_chapter_cell" id="total-chapter-{{=file_type}}"></div>
+          {{pass}}
           {{pass}}
         </div>
         <!-- statsTableChapters -->
