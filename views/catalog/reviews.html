@@ -6,11 +6,11 @@ if len(p)>0 and len(s)>0:
  return A(p, _href=s)
  elif len(p) > 0:
  return p
- elif len(s) > 0:  
+ elif len(s) > 0:
 return A(s, _href=s)
 else:
 return None
-pass 
+pass
 
 }}
 
@@ -19,7 +19,7 @@ def format_date(d):
 l = d.split('-')
 val =  '/'.join(reversed(l))
 val =val +'.'
-return val 
+return val
 }}
 
 	{{pf = ompdal.getPublicationFormatByName(submission_id,"Rezension", available=False, approved=True)}}
@@ -43,27 +43,31 @@ return val
 				for d in data:
 					v[d['setting_name']]=d['setting_value']
 				pass
+	            if v['description']:
 				=XML(v['description'])
+				pass
+				if v['creator']:
 				=P()
 				=XML(v['creator'])
+	            pass
 				pl = set_publisher_l(v['publisher'], v['source'])
 				if pl:
 					=XML(' ')
-					=pl	
+					=pl
 				pass
 				=XML(' ')
-		                =XML(format_date(v['dateCreated']))			
+		                =XML(format_date(v['dateCreated']))
 				=BR()
 				=BR()
 				pass
 			pass
-		pass 
+		pass
 	pass
 	}}
 
 
 
-			 	
+
 
 
 </div>
