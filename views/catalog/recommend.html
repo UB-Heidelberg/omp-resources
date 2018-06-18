@@ -69,7 +69,7 @@ if form.process(formname='reccommendform').accepted:
                               press_settings.getLocalizedValue('location', ''),
                               press_settings.getLocalizedValue('publisher', ''), doi, locale,
                               series_name=series_name, series_pos=submission.series_position, max_contrib=3)
-    doi_url = "http://dx.doi.org/" + doi
+    doi_url = "https://doi.org/" + doi
 
     email_elements = [' '.join(rc), ' '.join([citation, doi_url]),' '.join(rc2), path]
 
