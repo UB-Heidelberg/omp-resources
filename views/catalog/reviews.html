@@ -22,12 +22,14 @@ val =val +'.'
 return val
 }}
 
-	{{pf = ompdal.getPublicationFormatByName(submission_id,"Rezension", available=False, approved=True)}}
-	{{if pf == None:
-	pf = ompdal.getPublicationFormatByName(submission_id,"Review", available=False, approved=True)
-	pass
-	}}
-
+{{
+pf= None
+for val in ['Review','Rezension']:
+	if pf is None:
+    	pf = ompdal.getPublicationFormatByName(submission_id,val, available=False, approved=True)
+pass
+pass
+}}
 
 
 	{{
