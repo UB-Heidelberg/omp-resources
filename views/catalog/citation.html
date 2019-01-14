@@ -3,7 +3,7 @@
   {{=formatCitation(cleanTitle, subtitle, authors, editors, date_published,
     press_settings.getLocalizedValue('location', ''), press_settings.getLocalizedValue('publisher', ''), doi, locale,
     series_name=series_name, series_pos=submission.series_position, max_contrib=3,date_first_published=date_first_published)}}
-  {{=A(doi, _href="https://doi.org/"+doi)}}
+  {{=A(formatDoi(doi), _href=formatDoi(doi))}}
 </p>
 <!-- citation button -->
 
