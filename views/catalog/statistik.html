@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-
   <ul class="nav nav-tabs">
     <li class="active"><a href="#full" data-toggle="tab"><i class="icon-briefcase"></i> {{=T('Book')}}</a></li>
     <li class=""><a href="#chapters" data-toggle="tab">{{=T('Chapters')}}</a></li>
@@ -21,7 +19,7 @@
           {{file_type = 'html' if file_type == 'xml' else file_type }}
           {{file_type = 'epub' if file_type == 'epub+zip' else file_type }}
 
-          <div class="stats_chapter_cell">{{=B(file_type.upper())}}</div>                            
+          <div class="stats_chapter_cell">{{=B(file_type.upper())}}</div>
           {{file_type = 'xml' if file_type == 'html' else file_type }}
 
           {{fid=str(submission.submission_id)+'-'+str(full_file.attributes['file_id'])+'-'+str(file_type)}}
@@ -38,9 +36,9 @@
         {{pass}}
       </div>
     </div>
-    <!-- full -end -->  
+    <!-- full -end -->
     <div class="tab-pane" id="chapters">
-     
+
       <div id="statsTableChapters" class="table">
         <div class="stats_chapter_row statss_table_head">
           <div class="stats_chapter_cell"></div>
@@ -92,15 +90,15 @@
           {{pass}}
         </div>
         <!-- statsTableChapters -->
-      
+
       </div>
 
     </div>
-    <!--chapters end -->  
+    <!--chapters end -->
 
 
 </div>
-<!-- tab-content-end -->  
+<!-- tab-content-end -->
 
 <script type="text/javascript">
 var ids = {{ = XML(file_ids)}};

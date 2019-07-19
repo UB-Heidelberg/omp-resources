@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <p>
   {{=formatCitation(cleanTitle, subtitle, authors, editors, date_published,
     press_settings.getLocalizedValue('location', ''), press_settings.getLocalizedValue('publisher', ''), doi, locale,
@@ -7,7 +6,7 @@
 </p>
 <!-- citation button -->
 
-<a target="_blank" class="btn btn-default" data-toggle="modal" data-target="#citationModal" role="button">{{=T('More citation styles')}}</a>
+<a href="#citationModal" class="btn btn-default" data-toggle="modal" data-target="#citationModal" role="button">{{=T('More citation styles')}}</a>
 <!-- Modal -->
 <div id="citationModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
