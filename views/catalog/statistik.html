@@ -1,72 +1,52 @@
-{{book_id=myconf.take('statistik.id')+':'+str(submission.submission_id)}}
-{{book=[book_id]}}
-{{ids=[]}}
+{{book_id=[myconf.take('statistik.id')+':'+str(submission.submission_id)]}}
+{{chapter_ids=[]}}
+
 <ul class="nav nav-tabs">
     <li class="active"><a href="#full" data-toggle="tab"><i class="icon-briefcase"></i> {{=T('Book')}}</a></li>
     <li class=""><a href="#chapters" data-toggle="tab">{{=T('Chapters')}}</a></li>
-  </ul>
 
-  <div class="tab-content">
+</ul>
+
+<div class="tab-content">
     <div class="tab-pane active" id="full">
-      <div  class="table">
-
-
-
-       <div class="stats_chapter_row">
-          <div class="stats_chapter_cell">
-
-            <div class="stats_chapter_title"></div>
-          </div>
-
-          <div class="stats_chapter_cell">
-            <div id="{{=book_id.replace(':','_')}}" class="chapter_file">
+        <div class="table">
+            <div class="stats_chapter_row">
+                <div class="stats_chapter_cell">
+                    <div class="stats_chapter_title"></div>
+                </div>
+                <div class="stats_chapter_cell">
+                    <div id="{{=book_id[0].replace(':','_')}}" class="chapter_file">
+                    </div>
+                </div>
             </div>
-
-          </div>
-
         </div>
-
-
-      </div>
     </div>
     <!-- full -end -->
     <div class="tab-pane" id="chapters">
+        <div id="statsTableChapters" class="table">
+            {{display_authors=haveMultipleAuthors(chapters)}}
 
-      <div id="statsTableChapters" class="table">
+            {{for c in chapters:}}
+            {{c_title = c.settings.getLocalizedValue('title', locale)}}
+            {{ch_id=myconf.take('statistik.id')+':'+str(submission.submission_id)+'-c'+str(c.attributes.chapter_id)}}
+            {{chapter_ids.append(ch_id)}}
 
-        {{display_authors=haveMultipleAuthors(chapters)}}
-
-        {{for c in chapters:}}
-        {{c_title = c.settings.getLocalizedValue('title', locale)}}
-        {{ch_id=myconf.take('statistik.id')+':'+str(submission.submission_id)+'-c'+str(c.attributes.chapter_id)}}
-        {{ids.append(ch_id)}}
-
-        <div class="stats_chapter_row">
-          <div class="stats_chapter_cell">
-
-            <div class="stats_chapter_title">{{=c_title}}</div>
-          </div>
-
-          <div class="stats_chapter_cell">
-            <div id="{{=ch_id.replace(':','_')}}" class="chapter_file">
+            <div class="stats_chapter_row">
+                <div class="stats_chapter_cell">
+                    <div class="stats_chapter_title">{{=c_title}}</div>
+                </div>
+                <div class="stats_chapter_cell">
+                    <div id="{{=ch_id.replace(':','_')}}" class="chapter_file">
+                    </div>
+                </div>
             </div>
+            {{pass}}
 
-          </div>
-
-
+            <div class="stats_chapter_row">
+                <div class="stats_chapter_cell">{{=TD(T('Total'))}}</div>
+                <div class="stats_chapter_cell" id="total-chapter-files"></div>
+            </div>
         </div>
-        {{pass}}
-        <!-- summe -->
-        <div class="stats_chapter_row">
-          <div class="stats_chapter_cell">{{=TD(T('Total'))}}</div>
-
-          <div class="stats_chapter_cell" id="total-chapter-files"></div>
-
-        </div>
-        <!-- statsTableChapters -->
-
-      </div>
-
     </div>
     <!--chapters end -->
 
@@ -75,11 +55,14 @@
 <!-- tab-content-end -->
 
 <script type="text/javascript">
-var ids = {{ = XML(ids)}};
-var b_id = {{ = XML(book)}};
 
-$('#statistik-button').click(function(){
-$('#oas').slideToggle()
-});
+    var chapter_ids = {{=XML(chapter_ids)}};
+
+    var book_id = {{=XML(book_id)}};
+
+    $('#statistik-button').click(function () {
+
+        $('#oas').slideToggle()
+    });
 </script>
 <script src="{{=URL('static','js/stats.js')}}"></script>
