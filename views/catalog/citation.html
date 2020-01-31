@@ -1,8 +1,10 @@
 <p>
   {{=formatCitation(cleanTitle, subtitle, authors, editors, date_published,
     press_settings.getLocalizedValue('location', ''), press_settings.getLocalizedValue('publisher', ''), doi, locale,
-    series_name=series_name, series_pos=submission.series_position, max_contrib=3,date_first_published=date_first_published)}}
-  {{=A(formatDoi(doi), _href=formatDoi(doi))}}
+    series_name=series_name, series_pos=submission.series_position, max_contrib=3,date_first_published=date_first_published,
+    chapter=c)}}
+  {{citation_doi = chapter_doi if chapter_doi else doi}}
+  {{=A(formatDoi(citation_doi), _href=formatDoi(citation_doi))}}
 </p>
 <!-- citation button -->
 
