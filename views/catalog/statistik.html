@@ -119,9 +119,9 @@ function setValue(data, id) {
         console.info( id, 'does not have any values');
     }
 
-};
+}
 
-var url = "https://statistik.ub.uni-heidelberg.de/oa_statistik/doc_id/period/?doc_id=" + [book_id].concat(chapter_ids).join(',')  +"&uid=" + guid();
+var url = "https://statistik.ub.uni-heidelberg.de/oa_statistik/doc_id/item_period/?doc_id=" + [book_id].concat(chapter_ids).join(',')  +"&uid=" + guid();
 
 /**
  *  get data from url and set values
@@ -138,7 +138,7 @@ $.getJSON(url, function (data) {
 
         var chapter_val = setValue(data, chapter_ids[i]);
 
-        if (parseInt(chapter_val)!==0  & chapter_val !== undefined) {
+        if (parseInt(chapter_val)!==0  && chapter_val !== undefined) {
             $(chapter_div).text(chapter_val);
             chapter_total += chapter_val;
         }
