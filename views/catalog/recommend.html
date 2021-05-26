@@ -65,16 +65,16 @@ if form.process(formname='reccommendform').accepted:
 
     #TODO citation_year = dateToStr(date_published, locale, "%Y")
 
-    citation = formatCitation(cleanTitle, subtitle, authors, editors, date_published,
+    citation = formatCitation(cleanTitle, subtitle, authors, editors, translators, date_published,
                               press_settings.getLocalizedValue('location', ''),
-                              press_settings.getLocalizedValue('publisher', ''), doi, locale,
-                              series_name=series_name, series_pos=submission.series_position, max_contrib=3)
+                              press_settings.getLocalizedValue('publisher', ''), locale,
+                              series_name=series_name, series_pos=submission.series_position, max_contrib=3, date_first_published=date_first_published)
     doi_url = "https://doi.org/" + doi
 
     email_elements = [' '.join(rc), ' '.join([citation, doi_url]),' '.join(rc2), path]
 
     email_text = '\n\n'.join(email_elements)
-    msg = MIMEText(email_text.decode('utf-8'), 'plain', 'utf-8')
+    msg = MIMEText(email_text, 'plain', 'utf-8')
     msg["From"]  = request.vars.senderEmail
     msg["To"]   =  request.vars.recipientEmail
     msg["Subject"] = T('Book Recommendation')
