@@ -79,7 +79,7 @@ if form.process(formname='reccommendform').accepted:
     msg["To"]   =  request.vars.recipientEmail
     msg["Subject"] = T('Book Recommendation')
     p = Popen(["/usr/sbin/sendmail", "-t", "-oi"], stdin=PIPE)
-    p.communicate(msg.as_string())
+    p.communicate(msg.as_bytes())
 
 elif form.errors:
     redirect(URL('error'))
